@@ -20,7 +20,7 @@
 -module(cowboy_tcp_transport).
 
 -export([name/0, messages/0, listen/1, accept/2, recv/3, send/2, setopts/2,
-	controlling_process/2, peername/1, close/1, sockname/1]).
+	controlling_process/2, peername/1, close/1, sockname/1, connect/4]).
 
 %% @doc Name of this transport API, <em>tcp</em>.
 -spec name() -> tcp.
@@ -111,3 +111,10 @@ close(Socket) ->
 	-> {ok, {inet:ip_address(), inet:port_number()}} | {error, atom()}.
 sockname(Socket) ->
 	inet:sockname(Socket).
+
+%% @doc Connects to a TCP socket
+%% @see gen_tcp:connect/4
+-spec connect(inet:ip_address() | inet:hostname(), inet:port_number(),
+	list(), timeout()) -> {ok, inet:socket()} | {error, inet:posix()}.
+connect(Host, Port, Options, Timeout) ->
+	gen_tcp:connect(Host, Port, Options, Timeout).
